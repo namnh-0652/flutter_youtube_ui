@@ -9,9 +9,12 @@ environment:
   sdk: '>=3.0.0'
 
 dependencies:
+  better_player_plus: ^1.0.7
   flutter:
     sdk: flutter
+  flutter_hooks: ^0.20.5
   flutter_riverpod: ^2.6.1
+  hooks_riverpod: ^2.6.1
   timeago: ^3.0.2
 
 dev_dependencies:

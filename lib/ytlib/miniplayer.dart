@@ -369,7 +369,7 @@ class _MiniplayerState extends State<Miniplayer> with TickerProviderStateMixin {
     ).animate(CurvedAnimation(parent: _animationController!, curve: widget.curve));
 
     _sizeAnimation.addListener(() {
-      if (_sizeAnimation.value == startHeight) return;
+      // if (_sizeAnimation.value == startHeight) return;
 
       _dragHeight = _sizeAnimation.value;
 

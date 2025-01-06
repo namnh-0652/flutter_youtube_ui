@@ -1,3 +1,4 @@
+import 'package:better_player_plus/better_player_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_youtube_ui/data.dart';
@@ -6,7 +7,8 @@ import 'package:flutter_youtube_ui/widgets/widgets.dart';
 import 'package:flutter_youtube_ui/ytlib/miniplayer.dart';
 
 class VideoScreen extends StatefulWidget {
-  const VideoScreen({super.key});
+  const VideoScreen({super.key, required this.videoController});
+  final BetterPlayerController videoController;
   @override
   _VideoScreenState createState() => _VideoScreenState();
 }
@@ -47,11 +49,9 @@ class _VideoScreenState extends State<VideoScreen> {
                       children: [
                         Stack(
                           children: [
-                            Image.network(
-                              selectedVideo!.thumbnailUrl,
-                              height: 220.0,
-                              width: double.infinity,
-                              fit: BoxFit.cover,
+                            AspectRatio(
+                              aspectRatio: 16 / 9,
+                              child: BetterPlayer(controller: widget.videoController),
                             ),
                             IconButton(
                               iconSize: 30.0,
@@ -62,10 +62,6 @@ class _VideoScreenState extends State<VideoScreen> {
                             ),
                           ],
                         ),
-                        const LinearProgressIndicator(
-                          value: 0.4,
-                          valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
-                        ),
                         Expanded(
                           child: SingleChildScrollView(
                             physics: _ignoreScrolling.value
@@ -74,7 +70,7 @@ class _VideoScreenState extends State<VideoScreen> {
                             controller: _scrollController,
                             child: Column(
                               children: [
-                                VideoInfo(video: selectedVideo),
+                                VideoInfo(video: selectedVideo!),
                                 ListView.builder(
                                   shrinkWrap: true,
                                   physics: const NeverScrollableScrollPhysics(),

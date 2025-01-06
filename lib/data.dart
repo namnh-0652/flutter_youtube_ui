@@ -27,6 +27,7 @@ class Video {
   final String viewCount;
   final String likes;
   final String dislikes;
+  final String videoUrl;
 
   const Video({
     required this.id,
@@ -38,6 +39,8 @@ class Video {
     required this.viewCount,
     required this.likes,
     required this.dislikes,
+    this.videoUrl =
+        'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
   });
 }
 
@@ -52,6 +55,7 @@ final List<Video> videos = [
     viewCount: '10K',
     likes: '958',
     dislikes: '4',
+
   ),
   Video(
     author: currentUser,
