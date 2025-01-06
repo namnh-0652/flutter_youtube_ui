@@ -1,0 +1,6 @@
+{
+    "cSpell.words": [
+        "Miniplayer"
+    ],
+    "dart.flutterRunAdditionalArgs": [ "--no-enable-impeller"]
+}

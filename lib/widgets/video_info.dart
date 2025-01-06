@@ -21,13 +21,13 @@ class VideoInfo extends StatelessWidget {
           Text(
             video.title,
             style:
-                Theme.of(context).textTheme.bodyText1!.copyWith(fontSize: 15.0),
+                Theme.of(context).textTheme.titleSmall!.copyWith(fontSize: 15.0),
           ),
           const SizedBox(height: 8.0),
           Text(
             '${video.viewCount} views • ${timeago.format(video.timestamp)}',
             style:
-                Theme.of(context).textTheme.caption!.copyWith(fontSize: 14.0),
+                Theme.of(context).textTheme.titleSmall!.copyWith(fontSize: 14.0),
           ),
           const Divider(),
           _ActionsRow(video: video),
@@ -74,7 +74,7 @@ class _ActionsRow extends StatelessWidget {
             label,
             style: Theme.of(context)
                 .textTheme
-                .caption!
+                .titleSmall!
                 .copyWith(color: Colors.white),
           ),
         ],
@@ -113,7 +113,7 @@ class _AuthorInfo extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     style: Theme.of(context)
                         .textTheme
-                        .bodyText1!
+                        .titleSmall!
                         .copyWith(fontSize: 15.0),
                   ),
                 ),
@@ -124,7 +124,7 @@ class _AuthorInfo extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     style: Theme.of(context)
                         .textTheme
-                        .caption!
+                        .titleSmall!
                         .copyWith(fontSize: 14.0),
                   ),
                 ),
@@ -137,7 +137,7 @@ class _AuthorInfo extends StatelessWidget {
               'SUBSCRIBE',
               style: Theme.of(context)
                   .textTheme
-                  .bodyText1!
+                  .titleSmall!
                   .copyWith(color: Colors.red),
             ),
           )

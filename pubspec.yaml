@@ -6,14 +6,15 @@ publish_to: 'none'
 version: 1.0.0+1
 
 environment:
-  sdk: '>=2.12.0 <3.0.0'
+  sdk: '>=3.0.0'
 
 dependencies:
+  better_player_plus: ^1.0.7
   flutter:
     sdk: flutter
-
-  flutter_riverpod: ^0.13.1+1
-  miniplayer: ^1.0.0+2
+  flutter_hooks: ^0.20.5
+  flutter_riverpod: ^2.6.1
+  hooks_riverpod: ^2.6.1
   timeago: ^3.0.2
 
 dev_dependencies:

@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_youtube_ui/data.dart';
 import 'package:flutter_youtube_ui/screens/nav_screen.dart';
-import 'package:miniplayer/miniplayer.dart';
+import 'package:flutter_youtube_ui/ytlib/miniplayer.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
-class VideoCard extends StatelessWidget {
+class VideoCard extends ConsumerWidget {
   final Video video;
   final bool hasPadding;
   final VoidCallback? onTap;
@@ -18,12 +18,12 @@ class VideoCard extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
       onTap: () {
-        context.read(selectedVideoProvider).state = video;
-        context
-            .read(miniPlayerControllerProvider)
+        ref.read(selectedVideoProvider.notifier).state = video;
+        ref
+            .read(miniPlayerControllerProvider.notifier)
             .state
             .animateToHeight(state: PanelState.MAX);
         if (onTap != null) onTap!();
@@ -53,7 +53,7 @@ class VideoCard extends StatelessWidget {
                     video.duration,
                     style: Theme.of(context)
                         .textTheme
-                        .caption!
+                        .titleSmall!
                         .copyWith(color: Colors.white),
                   ),
                 ),
@@ -85,7 +85,7 @@ class VideoCard extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                           style: Theme.of(context)
                               .textTheme
-                              .bodyText1!
+                              .titleSmall!
                               .copyWith(fontSize: 15.0),
                         ),
                       ),
@@ -96,7 +96,7 @@ class VideoCard extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                           style: Theme.of(context)
                               .textTheme
-                              .caption!
+                              .titleSmall!
                               .copyWith(fontSize: 14.0),
                         ),
                       ),
