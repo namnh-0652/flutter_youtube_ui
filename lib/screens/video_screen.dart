@@ -30,77 +30,78 @@ class _VideoScreenState extends State<VideoScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Container(
-          color: Theme.of(context).scaffoldBackgroundColor,
+      body: Container(
+        color: Theme.of(context).scaffoldBackgroundColor,
         child: Listener(
           onPointerMove: (event) {
             _ignoreScrolling.value = event.delta.dy > 0 && _scrollController!.position.pixels == 0;
           },
           child: ValueListenableBuilder(
             valueListenable: _ignoreScrolling,
-            builder: (context, value, child) => CustomScrollView(
-              physics: _ignoreScrolling.value
-                  ? const NeverScrollableScrollPhysics()
-                  : const AlwaysScrollableScrollPhysics(),
-              controller: _scrollController,
-              shrinkWrap: true,
-              slivers: [
-                SliverToBoxAdapter(
-                  child: Consumer(
-                    builder: (context, ref, _) {
-                      final selectedVideo = ref.watch(selectedVideoProvider);
-                      return SafeArea(
-                        child: Column(
+            builder: (context, value, child) {
+              return Consumer(
+                builder: (context, ref, _) {
+                  final selectedVideo = ref.watch(selectedVideoProvider);
+                  return SafeArea(
+                    child: Column(
+                      children: [
+                        Stack(
                           children: [
-                            Stack(
+                            Image.network(
+                              selectedVideo!.thumbnailUrl,
+                              height: 220.0,
+                              width: double.infinity,
+                              fit: BoxFit.cover,
+                            ),
+                            IconButton(
+                              iconSize: 30.0,
+                              icon: const Icon(Icons.keyboard_arrow_down),
+                              onPressed: () => ref
+                                  .read(miniPlayerControllerProvider)
+                                  .animateToHeight(state: PanelState.MIN),
+                            ),
+                          ],
+                        ),
+                        const LinearProgressIndicator(
+                          value: 0.4,
+                          valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
+                        ),
+                        Expanded(
+                          child: SingleChildScrollView(
+                            physics: _ignoreScrolling.value
+                                ? const NeverScrollableScrollPhysics()
+                                : const AlwaysScrollableScrollPhysics(),
+                            controller: _scrollController,
+                            child: Column(
                               children: [
-                                Image.network(
-                                  selectedVideo!.thumbnailUrl,
-                                  height: 220.0,
-                                  width: double.infinity,
-                                  fit: BoxFit.cover,
-                                ),
-                                IconButton(
-                                  iconSize: 30.0,
-                                  icon: const Icon(Icons.keyboard_arrow_down),
-                                  onPressed: () => ref
-                                      .read(miniPlayerControllerProvider)
-                                      .animateToHeight(state: PanelState.MIN),
+                                VideoInfo(video: selectedVideo),
+                                ListView.builder(
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  itemCount: suggestedVideos.length,
+                                  itemBuilder: (context, index) {
+                                    final video = suggestedVideos[index];
+                                    return VideoCard(
+                                      video: video,
+                                      hasPadding: true,
+                                      onTap: () => _scrollController!.animateTo(
+                                        0,
+                                        duration: const Duration(milliseconds: 200),
+                                        curve: Curves.easeIn,
+                                      ),
+                                    );
+                                  },
                                 ),
                               ],
                             ),
-                            const LinearProgressIndicator(
-                              value: 0.4,
-                              valueColor: AlwaysStoppedAnimation<Color>(
-                                Colors.red,
-                              ),
-                            ),
-                            VideoInfo(video: selectedVideo),
-                          ],
+                          ),
                         ),
-                      );
-                    },
-                  ),
-                ),
-                SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      final video = suggestedVideos[index];
-                      return VideoCard(
-                        video: video,
-                        hasPadding: true,
-                        onTap: () => _scrollController!.animateTo(
-                          0,
-                          duration: const Duration(milliseconds: 200),
-                          curve: Curves.easeIn,
-                        ),
-                      );
-                    },
-                    childCount: suggestedVideos.length,
-                  ),
-                ),
-              ],
-            ),
+                      ],
+                    ),
+                  );
+                },
+              );
+            },
           ),
         ),
       ),

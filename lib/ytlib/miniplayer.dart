@@ -49,6 +49,9 @@ class Miniplayer extends StatefulWidget {
   ///Used to set the color of the background box shadow
   final Color backgroundBoxShadow;
 
+  /// If true, the miniplayer can be minimized by tapping on it
+  final bool allowMinimizeOnTap;
+
   const Miniplayer({
     Key? key,
     required this.minHeight,
@@ -62,6 +65,7 @@ class Miniplayer extends StatefulWidget {
     this.onDismiss,
     this.onDismissed,
     this.controller,
+    this.allowMinimizeOnTap = false,
     this.backgroundBoxShadow = Colors.black45,
   }) : super(key: key);
 
@@ -214,8 +218,17 @@ class _MiniplayerState extends State<Miniplayer> with TickerProviderStateMixin {
                         ),
                       ),
                     ),
-                    onTap: () => _snapToPosition(
-                        _dragHeight != widget.maxHeight ? PanelState.MAX : PanelState.MIN),
+                    onTap: () {
+                      if (widget.allowMinimizeOnTap) {
+                        _snapToPosition(
+                          _dragHeight != widget.maxHeight ? PanelState.MAX : PanelState.MIN,
+                        );
+                      } else {
+                        if (_dragHeight == widget.minHeight) {
+                          _snapToPosition(PanelState.MAX);
+                        }
+                      }
+                    },
                     onPanStart: (details) {
                       _startHeight = _dragHeight;
                       updateCount = 0;
