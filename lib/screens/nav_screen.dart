@@ -31,14 +31,6 @@ class NavScreen extends HookConsumerWidget {
     final selectedIndex = useState(0);
     final selectedVideo = ref.watch(selectedVideoProvider);
     final miniPlayerController = ref.watch(miniPlayerControllerProvider);
-    final videoController = useMemoized(
-        () => BetterPlayerController(
-              betterPlayerDataSource: BetterPlayerDataSource.network(
-                selectedVideo?.videoUrl ?? '',
-              ),
-              BetterPlayerConfiguration(autoDispose: false, autoPlay: true),
-            )..setControlsEnabled(false),
-        [selectedVideo]);
 
     return Scaffold(
       body: Stack(
@@ -56,41 +48,54 @@ class NavScreen extends HookConsumerWidget {
           ..add(
             Offstage(
               offstage: selectedVideo == null,
-              child: Miniplayer(
-                controller: miniPlayerController,
-                minHeight: _playerMinHeight,
-                maxHeight: MediaQuery.of(context).size.height,
-                builder: (height, percentage) {
-                  if (selectedVideo == null) return const SizedBox.shrink();
-                  if (height <= _playerMinHeight + 200) {
-                    return Material(
-                      color: Colors.transparent,
-                      child: Stack(
-                        children: [
-                          AspectRatio(
-                            aspectRatio: 16 / 9,
-                            child: SizedBox(
-                              height: _playerMinHeight - 4,
-                              child: BetterPlayer(controller: videoController),
+              child: HookConsumer(builder: (context, ref, _) {
+                final videoController = useMemoized(() {
+                  return BetterPlayerController(
+                    betterPlayerDataSource: BetterPlayerDataSource.network(
+                      selectedVideo?.videoUrl ?? '',
+                    ),
+                    BetterPlayerConfiguration(autoDispose: false, autoPlay: true),
+                  )..setControlsEnabled(false);
+                }, [selectedVideo]);
+                useEffect(() {
+                  return () => videoController.dispose(forceDispose: true);
+                }, []);
+                return Miniplayer(
+                  controller: miniPlayerController,
+                  minHeight: _playerMinHeight,
+                  maxHeight: MediaQuery.of(context).size.height,
+                  builder: (height, percentage) {
+                    if (height <= _playerMinHeight + 200) {
+                      return Material(
+                        color: Colors.transparent,
+                        child: Stack(
+                          children: [
+                            AspectRatio(
+                              aspectRatio: 16 / 9,
+                              child: SizedBox(
+                                height: _playerMinHeight - 4,
+                                child: BetterPlayer(controller: videoController),
+                              ),
                             ),
-                          ),
-                          Positioned(
-                            right: 0,
-                            child: IconButton(
-                              iconSize: 24.0,
-                              icon: const Icon(Icons.close),
-                              onPressed: () {
-                                ref.read(selectedVideoProvider.notifier).state = null;
-                                videoController.dispose(forceDispose: true);
-                              },
+                            Positioned(
+                              right: 0,
+                              child: IconButton(
+                                iconSize: 24.0,
+                                icon: const Icon(Icons.close),
+                                onPressed: () {
+                                  videoController.dispose(forceDispose: true);
+                                  ref.read(selectedVideoProvider.notifier).state = null;
+                                },
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                    );
-                  }
-                  return VideoScreen(videoController: videoController);
-                },
+                          ],
+                        ),
+                      );
+                    }
+                    return VideoScreen(videoController: videoController);
+                  },
+                );
+              }
               ),
             ),
           ),
